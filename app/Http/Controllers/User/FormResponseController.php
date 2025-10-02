@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class FormResponseController extends Controller
 {
-    public function store(Request $request, $slug)
+      public function store(Request $request, $slug)
     {
         $form = Form::where('slug', $slug)->where('is_public', true)->firstOrFail();
 
@@ -19,7 +19,6 @@ class FormResponseController extends Controller
         // bangun rules dinamis berdasarkan definisi fields
         foreach ($fields as $field) {
             if (!empty($field['required'])) {
-                // gunakan nama unik untuk tiap pertanyaan (misal key)
                 $rules[$field['name']] = 'required';
             }
         }
@@ -38,6 +37,21 @@ class FormResponseController extends Controller
             'response_data' => $all,
         ]);
 
-        return redirect()->back()->with('success','Terima kasih, jawaban Anda telah tersimpan.');
+        // LAMA: return redirect()->back()->with('success','Terima kasih, jawaban Anda telah tersimpan.');
+
+        // BARU: Redirect ke halaman "Terima Kasih" yang sudah kita siapkan
+        return redirect()->route('forms.public.thanks', ['slug' => $form->slug]);
     }
+
+    /**
+     * Menampilkan halaman "Terima Kasih" setelah user submit form.
+     */
+  public function thanks($slug)
+{
+    $form = Form::where('slug', $slug)->where('is_public', true)->firstOrFail();
+    $hash = $form->hashid; // <-- pastikan ini ada
+
+    return view('forms.public_thanks', compact('form', 'hash'));
+}
+
 }

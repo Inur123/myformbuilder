@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Hashids\Hashids;
 
 class FormController extends Controller
 {
@@ -36,26 +37,27 @@ class FormController extends Controller
      * Menyimpan form baru ke database.
      */
     public function show(Form $form)
-{
-    // Otorisasi
-    if ($form->user->isNot(Auth::user())) {
-        abort(403, 'Unauthorized');
-    }
+    {
+        // Otorisasi
+        if ($form->user->isNot(Auth::user())) {
+            abort(403, 'Unauthorized');
+        }
 
-    // DIUBAH KEMBALI: Arahkan ke view 'forms.form' untuk langsung mengedit
-    return view('forms.form', compact('form'));
-}
+        // DIUBAH KEMBALI: Arahkan ke view 'forms.form' untuk langsung mengedit
+        return view('forms.form', compact('form'));
+    }
     public function store(Request $request)
     {
         $data = $request->validate([
             'title'            => 'required|string',
             'description'      => 'nullable|string',
             'form_fields'      => 'nullable|string',
-            'is_public'        => 'sometimes|boolean',
+            // 'is_public' bisa dihapus dari sini atau dibiarkan, tidak masalah
             'theme_color'      => 'nullable|string|max:7',
             'background_color' => 'nullable|string|max:7',
             'font_family'      => 'nullable|string',
             'header_image'     => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'thank_you_message'=> 'nullable|string',
         ]);
 
         // Handle upload header image jika ada
@@ -70,10 +72,12 @@ class FormController extends Controller
             ? json_decode($data['form_fields'], true)
             : [];
 
+        // === SOLUSI DITERAPKAN DI SINI ===
+        $data['is_public'] = $request->has('is_public');
+
         // Buat form melalui relasi user
         $form = Auth::user()->forms()->create($data);
 
-        // Arahkan ke halaman edit agar pengguna bisa langsung melanjutkan
         return redirect()->route('forms.edit', $form)->with('success', 'Form berhasil dibuat. Anda bisa melanjutkan mengedit.');
     }
 
@@ -96,7 +100,7 @@ class FormController extends Controller
      */
     public function update(Request $request, Form $form)
     {
-        // Otorisasi: pastikan form milik user yang sedang login
+        // Otorisasi
         if ($form->user->isNot(Auth::user())) {
             abort(403, 'Unauthorized');
         }
@@ -105,21 +109,19 @@ class FormController extends Controller
             'title'            => 'required|string',
             'description'      => 'nullable|string',
             'form_fields'      => 'nullable|string',
-            'is_public'        => 'sometimes|boolean',
-            // Validasi untuk tema
+            // 'is_public' bisa dihapus dari sini atau dibiarkan, tidak masalah
             'theme_color'      => 'nullable|string|max:7',
             'background_color' => 'nullable|string|max:7',
             'font_family'      => 'nullable|string',
             'header_image'     => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'thank_you_message'=> 'nullable|string',
         ]);
 
-        // Handle upload header image jika ada file baru
+        // ... (kode handle header_image Anda sudah benar) ...
         if ($request->hasFile('header_image')) {
-            // Hapus gambar lama jika ada
             if ($form->header_image) {
                 Storage::disk('public')->delete($form->header_image);
             }
-            // Simpan gambar baru
             $path = $request->file('header_image')->store('form-headers', 'public');
             $data['header_image'] = $path;
         }
@@ -128,18 +130,27 @@ class FormController extends Controller
             ? json_decode($data['form_fields'], true)
             : [];
 
+        // === SOLUSI DITERAPKAN DI SINI ===
+        $data['is_public'] = $request->has('is_public');
+
         $form->update($data);
 
-        // Kembali ke halaman edit dengan pesan sukses
         return redirect()->route('forms.edit', $form)->with('success', 'Form berhasil diperbarui');
     }
 
     /**
      * Menampilkan form ke publik.
      */
-    public function publicShow($slug)
+    public function publicShow($hash)
     {
-        $form = Form::where('slug', $slug)
+        $hashids = new Hashids('secret-key', 10);
+        $ids = $hashids->decode($hash);
+
+        if (empty($ids)) {
+            abort(404);
+        }
+
+        $form = Form::where('id', $ids[0])
             ->where('is_public', true)
             ->firstOrFail();
 

@@ -22,7 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses');
 });
 
-Route::get('/f/{slug}', [FormController::class, 'publicShow'])->name('forms.public.show');
-Route::post('/f/{slug}', [FormResponseController::class, 'store'])->name('forms.public.submit');
+Route::get('/{hash}', [FormController::class, 'publicShow'])->name('forms.public.show');
+
+Route::post('/{slug}', [FormResponseController::class, 'store'])->name('forms.public.submit');
+Route::get('/{slug}/thanks', [FormResponseController::class, 'thanks'])->name('forms.public.thanks');
 
 require __DIR__.'/auth.php';

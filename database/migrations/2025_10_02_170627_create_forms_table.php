@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('theme_color')->default('#4F46E5'); // Default: Indigo
             $table->string('background_color')->default('#F3F4F6'); // Default: Gray-100
             $table->string('font_family')->default('Inter');
+            $table->text('thank_you_message')->nullable();
             $table->timestamps();
         });
     }

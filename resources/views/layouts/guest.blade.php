@@ -8,31 +8,14 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap"
-        rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @stack('styles')
 </head>
 
-<body class="font-sans text-gray-900 antialiased">
-    {{-- DIUBAH: Latar belakang halaman menjadi lebih cerah (slate-100) dan hapus semua class 'dark:' --}}
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-100">
-        <div>
-            <a href="">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </div>
-
-        {{-- DIUBAH: Kartu utama dibuat lebih modern dengan sudut lebih bulat dan tanpa class 'dark:' --}}
-        <div class="w-full sm:max-w-2xl mt-6 bg-white shadow-md overflow-hidden sm:rounded-xl">
-            {{ $slot }}
-        </div>
-    </div>
+{{-- HAPUS CLASS "font-sans" DARI BODY --}}
+<body class="text-gray-900 antialiased">
+    {{ $slot }}
 </body>
-
 </html>

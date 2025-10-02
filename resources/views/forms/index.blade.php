@@ -29,30 +29,36 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Judul</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deskripsi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deskripsi
+                                </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dibuat</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
                             @forelse($forms as $form)
+                                @php
+                                    $hashids = new \Hashids\Hashids('secret-key', 10);
+                                    $hash = $hashids->encode($form->id);
+                                @endphp
                                 <tr>
-                                  <td class="px-6 py-4 text-sm font-medium text-gray-800">
-    {{ html_entity_decode(strip_tags($form->title)) }}
-</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-800">
+                                        {{ html_entity_decode(strip_tags($form->title)) }}
+                                    </td>
 
-<td class="px-6 py-4 text-sm text-gray-600">
-    {{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($form->description)), 50) }}
-</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                        {{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($form->description)), 50) }}
+                                    </td>
+
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         {{ $form->created_at->format('d M Y') }}
                                     </td>
+
                                     <td class="px-6 py-4 text-right text-sm space-x-4 whitespace-nowrap">
-                                        {{-- DIUBAH: Tombol 'Lihat' dan 'Edit' digabung menjadi satu --}}
                                         <a href="{{ route('forms.show', $form) }}"
                                             class="text-indigo-600 hover:text-indigo-800 font-medium">Lihat/Edit</a>
 
-                                        <a href="{{ route('forms.public.show', $form->slug) }}" target="_blank"
+                                        <a href="{{ route('forms.public.show', $hash) }}" target="_blank"
                                             class="text-green-600 hover:text-green-800 font-medium">
                                             Link Publik
                                         </a>

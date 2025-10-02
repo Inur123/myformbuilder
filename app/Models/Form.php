@@ -22,6 +22,7 @@ class Form extends Model
         'theme_color',
         'background_color',
         'font_family',
+        'thank_you_message',
     ];
 
     protected $casts = [
