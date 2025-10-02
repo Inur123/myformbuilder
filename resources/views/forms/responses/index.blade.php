@@ -27,6 +27,16 @@
                 <h3 class="text-4xl font-extrabold text-gray-900">{{ $totalResponses }}</h3>
                 <p class="text-sm text-gray-500">jawaban</p>
             </div>
+            @if ($totalResponses > 0)
+                    <a href="{{ route('forms.responses.export', $form) }}"
+                       class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        {{-- Icon Download (SVG) --}}
+                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Download Excel
+                    </a>
+                @endif
 
             {{-- Kartu Detail Data dalam Tabel (Ringkasan Data Mentah) --}}
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -90,9 +100,9 @@
                                             </td>
                                         @endforeach
 
-                                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-    {{ $response->created_at->translatedFormat('d F Y H:i') }}
-</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $response->created_at->translatedFormat('d F Y H:i') }}
+                                        </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="{{ route('forms.responses.show', [$form, $response]) }}"

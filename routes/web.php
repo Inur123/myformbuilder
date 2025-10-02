@@ -17,13 +17,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('forms', FormController::class);
-    // tambah route untuk export/lihat responses jika mau
-    Route::get('forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses');
-    Route::get('/forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses.index');
 
-    // Rute untuk melihat detail jawaban individual
+    Route::resource('forms', FormController::class);
+
+    // --- Rute untuk Form Responses ---
+
+    // Halaman utama untuk melihat semua jawaban (ringkasan)
+    // Saya hapus duplikasinya, cukup satu nama route
+    Route::get('forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses');
+
+    // **SOLUSI:** Pindahkan route 'export' ke sini, SEBELUM route dengan '{response}'
+    Route::get('forms/{form}/responses/export', [FormController::class, 'exportResponses'])->name('forms.responses.export');
+
+    // Rute untuk melihat detail satu jawaban
     Route::get('/forms/{form}/responses/{response}', [FormController::class, 'showResponseDetail'])->name('forms.responses.show');
+
+    // Rute untuk menghapus satu jawaban
     Route::delete('/forms/{form}/responses/{response}', [FormController::class, 'destroyResponse'])->name('forms.responses.destroy');
 });
 

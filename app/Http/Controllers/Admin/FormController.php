@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\FormResponsesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FormController extends Controller
 {
@@ -237,5 +239,19 @@ class FormController extends Controller
         // Redirect ke halaman index jawaban
         return redirect()->route('forms.responses.index', $form)
             ->with('success', 'Jawaban berhasil dihapus.');
+    }
+
+    public function exportResponses(Form $form)
+    {
+        // Otorisasi: Pastikan hanya pemilik form yang bisa mengunduh
+        if ($form->user->isNot(Auth::user())) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Buat nama file yang deskriptif
+        $fileName = 'jawaban-' . Str::slug($form->title) . '-' . now()->format('Y-m-d') . '.xlsx';
+
+        // Panggil Laravel Excel untuk mendownload file
+        return Excel::download(new FormResponsesExport($form), $fileName);
     }
 }
