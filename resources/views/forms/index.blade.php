@@ -6,12 +6,13 @@
     </x-slot>
 
     @if (session('success'))
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-2">
-            <div class="p-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
-                {{ session('success') }}
-            </div>
-        </div>
+        <x-alert type="success" :message="session('success')" />
     @endif
+
+    @if (session('error'))
+        <x-alert type="danger" :message="session('error')" />
+    @endif
+
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -43,17 +44,17 @@
                                 @endphp
                                 <tr>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
-    {!! \Illuminate\Support\Str::limit(html_entity_decode($form->title), 30, '...') !!}
-</td>
+                                        {!! \Illuminate\Support\Str::limit(html_entity_decode($form->title), 30, '...') !!}
+                                    </td>
 
 
                                     <td class="px-6 py-4 text-sm text-gray-600">
                                         {{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($form->description)), 30) }}
                                     </td>
 
-                                   <td class="px-6 py-4 text-sm text-gray-500">
-    {{ $form->created_at->translatedFormat('d F Y') }}
-</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        {{ $form->created_at->translatedFormat('d F Y') }}
+                                    </td>
 
 
                                     <td class="px-6 py-4 text-right text-sm space-x-4 whitespace-nowrap">
@@ -64,7 +65,7 @@
                                             class="text-green-600 hover:text-green-800 font-medium">
                                             Link Publik
                                         </a>
-                                        <a href="{{ route('forms.responses.index', $form) }}"
+                                        <a href="{{ route('forms.responses', $form) }}"
                                             class="text-blue-600 hover:text-blue-800 font-medium">
                                             Jawaban
                                         </a>

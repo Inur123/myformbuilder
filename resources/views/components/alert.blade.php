@@ -38,15 +38,9 @@
     ]);
 @endphp
 
-{{--
-    Menggunakan Alpine.js untuk state.
-    - 'show: true' untuk menampilkan alert.
-    - Alert akan hilang otomatis setelah 5 detik (5000ms).
-    - 'x-transition' untuk animasi fade in/out yang halus.
---}}
 <div
     x-data="{ show: true, timeout: null }"
-    x-init="timeout = setTimeout(() => { show = false }, 5000)"
+    x-init="timeout = setTimeout(() => { show = false }, 2500)"
     x-show="show"
     x-transition:enter="transform ease-out duration-300 transition"
     x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"

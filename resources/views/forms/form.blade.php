@@ -11,7 +11,13 @@
         </h2>
     </x-slot>
 
+    @if (session('success'))
+        <x-alert type="success" :message="session('success')" />
+    @endif
 
+    @if (session('error'))
+        <x-alert type="danger" :message="session('error')" />
+    @endif
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- Form dinamis dengan enctype untuk upload file --}}

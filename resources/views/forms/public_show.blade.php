@@ -39,10 +39,11 @@
             .btn-submit:hover {
                 filter: brightness(90%);
             }
+
             .border-theme {
-    border-top-width: 4px;
-    border-top-color: var(--theme-color);
-}
+                border-top-width: 4px;
+                border-top-color: var(--theme-color);
+            }
         </style>
     @endpush
 
@@ -60,7 +61,7 @@
         </div>
 
         {{-- KARTU 2: Judul & Deskripsi --}}
-       <div class="bg-white shadow-lg rounded-2xl p-6 sm:p-8 border-theme">
+        <div class="bg-white shadow-lg rounded-2xl p-6 sm:p-8 border-theme">
             @if (session('success'))
                 <x-alert type="success" :message="session('success')" />
             @elseif($errors->any())

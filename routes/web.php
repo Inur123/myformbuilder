@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
 
     // Rute untuk menghapus satu jawaban
     Route::delete('/forms/{form}/responses/{response}', [FormController::class, 'destroyResponse'])->name('forms.responses.destroy');
+
+
 });
 
 Route::get('/f/{hash}', [FormController::class, 'publicShow'])->name('forms.public.show');

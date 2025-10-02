@@ -1,4 +1,11 @@
 <x-app-layout>
+    @if (session('success'))
+        <x-alert type="success" :message="session('success')" />
+    @endif
+
+    @if (session('error'))
+        <x-alert type="danger" :message="session('error')" />
+    @endif
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}

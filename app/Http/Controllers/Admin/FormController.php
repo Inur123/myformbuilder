@@ -212,6 +212,38 @@ class FormController extends Controller
     /**
      * Menghapus jawaban individu dari form (FormResponse).
      */
+    /**
+ * Menghapus form beserta semua responsnya.
+ */
+public function destroy(Form $form)
+{
+    // Otorisasi: pastikan form milik user yang sedang login
+    if ($form->user->isNot(Auth::user())) {
+        abort(403, 'Unauthorized');
+    }
+
+    // Hapus semua respons terkait form ini
+    foreach ($form->responses as $response) {
+        $answers = $response->response_data ?? [];
+        foreach ($answers as $answer) {
+            if (is_string($answer) && Str::startsWith($answer, 'forms/')) {
+                Storage::disk('public')->delete($answer);
+            }
+        }
+        $response->delete();
+    }
+
+    // Hapus header image form jika ada
+    if ($form->header_image) {
+        Storage::disk('public')->delete($form->header_image);
+    }
+
+    // Hapus form
+    $form->delete();
+
+    return redirect()->route('forms.index')->with('success', 'Form beserta semua responsnya berhasil dihapus.');
+}
+
     public function destroyResponse(Form $form, FormResponse $response)
     {
         // Otorisasi: Form harus milik user yang sedang login
@@ -237,8 +269,8 @@ class FormController extends Controller
         $response->delete();
 
         // Redirect ke halaman index jawaban
-        return redirect()->route('forms.responses.index', $form)
-            ->with('success', 'Jawaban berhasil dihapus.');
+       return redirect()->route('forms.responses', $form)
+        ->with('success', 'Jawaban berhasil dihapus.');
     }
 
     public function exportResponses(Form $form)
