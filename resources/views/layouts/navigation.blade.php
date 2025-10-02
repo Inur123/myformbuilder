@@ -15,12 +15,25 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('forms.index')" :active="request()->routeIs('forms.*')">
+                        {{ __('Forms Saya') }}
+                    </x-nav-link>
+
+
+
+                    <!-- Optional: jika ada halaman publik eksplor -->
+                    {{--
+                    <x-nav-link :href="route('forms.public.index')" :active="request()->routeIs('forms.public.*')">
+                        {{ __('Eksplor Form') }}
+                    </x-nav-link>
+                    --}}
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
+                <x-dropdown align="right" width="60">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
@@ -34,6 +47,12 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <!-- Quick links in dropdown -->
+
+
+
+                        <div class="border-t border-gray-100 my-1"></div>
+
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
@@ -70,6 +89,17 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('forms.index')" :active="request()->routeIs('forms.*')">
+                {{ __('Forms Saya') }}
+            </x-responsive-nav-link>
+
+
+            {{-- Optional public explore
+            <x-responsive-nav-link :href="route('forms.public.index')" :active="request()->routeIs('forms.public.*')">
+                {{ __('Eksplor Form') }}
+            </x-responsive-nav-link>
+            --}}
         </div>
 
         <!-- Responsive Settings Options -->
@@ -83,6 +113,9 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+
+
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
