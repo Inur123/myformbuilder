@@ -1,44 +1,50 @@
-<x-guest-layout>
-@push('styles')
-    <style>
-        /* Impor font yang dipilih secara dinamis dari Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family={{ urlencode($form->font_family ?? 'Inter') }}:wght@400;500;600;700&display=swap');
+<x-user-layout>
+    @push('styles')
+        <style>
+            /* Impor font yang dipilih secara dinamis dari Google Fonts */
+            @import url('https://fonts.googleapis.com/css2?family={{ urlencode($form->font_family ?? 'Inter') }}:wght@400;500;600;700&display=swap');
 
-        :root {
-            --theme-color: {{ $form->theme_color ?? '#4F46E5' }};
-        }
+            :root {
+                --theme-color: {{ $form->theme_color ?? '#4F46E5' }};
+            }
 
-        body {
-            background-color: {{ $form->background_color ?? '#F1F5F9' }} !important;
-            /* Terapkan font yang sudah diimpor */
-            font-family: '{{ $form->font_family ?? 'Inter' }}', sans-serif;
-        }
+            body {
+                background-color: {{ $form->background_color ?? '#F1F5F9' }} !important;
+                /* Terapkan font yang sudah diimpor */
+                font-family: '{{ $form->font_family ?? 'Inter' }}', sans-serif;
+            }
 
-        /* === KODE PERBAIKAN DITAMBAHKAN DI SINI === */
-        .form-question-label p {
-            display: inline; /* Membuat paragraf sejajar */
-            margin: 0;
-            padding: 0;
-        }
-        /* === BATAS KODE PERBAIKAN === */
+            /* === KODE PERBAIKAN DITAMBAHKAN DI SINI === */
+            .form-question-label p {
+                display: inline;
+                /* Membuat paragraf sejajar */
+                margin: 0;
+                padding: 0;
+            }
 
-        .themed-input {
-            color: var(--theme-color);
-        }
+            /* === BATAS KODE PERBAIKAN === */
 
-        .themed-focus-border:focus {
-            border-color: var(--theme-color);
-        }
+            .themed-input {
+                color: var(--theme-color);
+            }
 
-        .btn-submit {
-            background-color: var(--theme-color);
-        }
+            .themed-focus-border:focus {
+                border-color: var(--theme-color);
+            }
 
-        .btn-submit:hover {
-            filter: brightness(90%);
-        }
-    </style>
-@endpush
+            .btn-submit {
+                background-color: var(--theme-color);
+            }
+
+            .btn-submit:hover {
+                filter: brightness(90%);
+            }
+            .border-theme {
+    border-top-width: 4px;
+    border-top-color: var(--theme-color);
+}
+        </style>
+    @endpush
 
     {{-- Pembungkus utama dengan jarak otomatis antar kartu --}}
     <div class="max-w-3xl mx-auto py-8 px-4 sm:px-0 space-y-8">
@@ -54,7 +60,7 @@
         </div>
 
         {{-- KARTU 2: Judul & Deskripsi --}}
-        <div class="bg-white shadow-lg rounded-2xl p-6 sm:p-8">
+       <div class="bg-white shadow-lg rounded-2xl p-6 sm:p-8 border-theme">
             @if (session('success'))
                 <x-alert type="success" :message="session('success')" />
             @elseif($errors->any())
@@ -67,9 +73,10 @@
             </div>
         </div>
 
-        {{-- Form yang membungkus semua kartu input --}}
+
         {{-- **PERBAIKAN UTAMA**: Tambahkan enctype="multipart/form-data" di sini --}}
-        <form method="POST" action="{{ route('forms.public.submit', $form->slug) }}" class="space-y-8" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('forms.public.submit', $form->slug) }}" class="space-y-8"
+            enctype="multipart/form-data">
             @csrf
 
             {{-- Loop untuk membuat KARTU untuk SETIAP input --}}
@@ -82,7 +89,8 @@
                     @endphp
                     <div>
                         {{-- PERUBAHAN: Menambahkan class 'form-question-label' --}}
-                        <label for="{{ $id }}" class="block text-sm font-medium text-gray-900 form-question-label">
+                        <label for="{{ $id }}"
+                            class="block text-sm font-medium text-gray-900 form-question-label">
                             {!! $field['label'] !!}
                             @if ($isRequired)
                                 {{-- PERUBAHAN: Menambahkan margin kiri 'ml-1' --}}
@@ -109,12 +117,12 @@
                                             {{ $option }}</option>
                                     @endforeach
                                 </select>
-                            {{-- **LOGIKA BARU DITAMBAHKAN DI SINI:** Input untuk Upload File --}}
+                                {{-- **LOGIKA BARU DITAMBAHKAN DI SINI:** Input untuk Upload File --}}
                             @elseif($field['type'] === 'file')
                                 <input type="file" name="{{ $name }}" id="{{ $id }}"
                                     class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 mt-2"
                                     @if ($isRequired) required @endif>
-                            {{-- Batas Logika Baru --}}
+                                {{-- Batas Logika Baru --}}
                             @elseif($field['type'] === 'date')
                                 <input type="date" name="{{ $name }}" id="{{ $id }}"
                                     value="{{ old($name) }}"
@@ -163,4 +171,4 @@
             </div>
         </form>
     </div>
-</x-guest-layout>
+</x-user-layout>

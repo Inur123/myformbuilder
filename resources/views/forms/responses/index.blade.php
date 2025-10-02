@@ -90,9 +90,10 @@
                                             </td>
                                         @endforeach
 
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $response->created_at->format('d M Y H:i') }}
-                                        </td>
+                                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+    {{ $response->created_at->translatedFormat('d F Y H:i') }}
+</td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="{{ route('forms.responses.show', [$form, $response]) }}"
                                                 class="text-indigo-600 hover:text-indigo-900">

@@ -249,14 +249,15 @@
                         selector: `#${editorId}`,
                         height: 150,
                         menubar: false,
-                        plugins: 'lists link autolink',
-                        toolbar: 'bold italic underline | link | removeformat',
+                        plugins: 'lists link autolink textcolor', // plugin untuk warna teks
+                        toolbar: 'bold italic underline | forecolor | link | removeformat', // tombol untuk ganti warna
                         setup: function(editor) {
                             editor.on('input change', function() {
                                 updateField(index, 'label', editor.getContent());
                             });
                         }
                     });
+
                 });
                 updateHiddenInput();
             }
@@ -335,8 +336,8 @@
                 selector: 'textarea#title',
                 height: 80,
                 menubar: false,
-                plugins: 'autolink',
-                toolbar: 'bold italic underline | removeformat',
+                plugins: 'autolink textcolor', // tambahkan textcolor
+                toolbar: 'bold italic underline | forecolor | removeformat', // tambahkan forecolor
                 setup: function(editor) {
                     editor.on('init', function() {
                         this.save();
@@ -346,12 +347,13 @@
                     });
                 }
             });
+
             tinymce.init({
                 selector: 'textarea#description',
                 height: 200,
                 menubar: false,
-                plugins: 'lists link autolink',
-                toolbar: 'bold italic underline | bullist numlist | link | removeformat',
+                plugins: 'lists link autolink textcolor', // tambahkan textcolor
+                toolbar: 'bold italic underline | forecolor | bullist numlist | link | removeformat', // tambahkan forecolor
                 setup: function(editor) {
                     editor.on('init', function() {
                         this.save();
@@ -361,18 +363,20 @@
                     });
                 }
             });
+
             tinymce.init({
                 selector: 'textarea#thank_you_message',
                 height: 150,
                 menubar: false,
-                plugins: 'lists link autolink',
-                toolbar: 'bold italic underline | bullist numlist | link | removeformat',
+                plugins: 'lists link autolink textcolor', // tambahkan textcolor
+                toolbar: 'bold italic underline | forecolor | bullist numlist | link | removeformat', // tambahkan forecolor
                 setup: function(editor) {
                     editor.on('init change input', function() {
                         this.save();
                     });
                 }
             });
+
         })();
     </script>
 </x-app-layout>

@@ -22,14 +22,14 @@ Route::middleware('auth')->group(function () {
     Route::get('forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses');
     Route::get('/forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses.index');
 
-// Rute untuk melihat detail jawaban individual
-Route::get('/forms/{form}/responses/{response}', [FormController::class, 'showResponseDetail'])->name('forms.responses.show');
-Route::delete('/forms/{form}/responses/{response}', [FormController::class, 'destroyResponse'])->name('forms.responses.destroy');
+    // Rute untuk melihat detail jawaban individual
+    Route::get('/forms/{form}/responses/{response}', [FormController::class, 'showResponseDetail'])->name('forms.responses.show');
+    Route::delete('/forms/{form}/responses/{response}', [FormController::class, 'destroyResponse'])->name('forms.responses.destroy');
 });
 
-Route::get('/{hash}', [FormController::class, 'publicShow'])->name('forms.public.show');
+Route::get('/f/{hash}', [FormController::class, 'publicShow'])->name('forms.public.show');
+Route::post('/f/{slug}', [FormResponseController::class, 'store'])->name('forms.public.submit');
+Route::get('/f/{slug}/thanks', [FormResponseController::class, 'thanks'])->name('forms.public.thanks');
 
-Route::post('/{slug}', [FormResponseController::class, 'store'])->name('forms.public.submit');
-Route::get('/{slug}/thanks', [FormResponseController::class, 'thanks'])->name('forms.public.thanks');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

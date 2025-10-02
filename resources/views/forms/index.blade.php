@@ -43,16 +43,18 @@
                                 @endphp
                                 <tr>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
-                                        {{ html_entity_decode(strip_tags($form->title)) }}
-                                    </td>
+    {!! \Illuminate\Support\Str::limit(html_entity_decode($form->title), 30, '...') !!}
+</td>
+
 
                                     <td class="px-6 py-4 text-sm text-gray-600">
-                                        {{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($form->description)), 50) }}
+                                        {{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($form->description)), 30) }}
                                     </td>
 
-                                    <td class="px-6 py-4 text-sm text-gray-500">
-                                        {{ $form->created_at->format('d M Y') }}
-                                    </td>
+                                   <td class="px-6 py-4 text-sm text-gray-500">
+    {{ $form->created_at->translatedFormat('d F Y') }}
+</td>
+
 
                                     <td class="px-6 py-4 text-right text-sm space-x-4 whitespace-nowrap">
                                         <a href="{{ route('forms.show', $form) }}"
@@ -63,9 +65,9 @@
                                             Link Publik
                                         </a>
                                         <a href="{{ route('forms.responses.index', $form) }}"
-        class="text-blue-600 hover:text-blue-800 font-medium">
-        Jawaban
-    </a>
+                                            class="text-blue-600 hover:text-blue-800 font-medium">
+                                            Jawaban
+                                        </a>
 
                                         <form action="{{ route('forms.destroy', $form) }}" method="POST"
                                             class="inline-block"

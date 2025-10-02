@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-user-layout>
     @push('styles')
         <style>
             /* ... (kode style Anda) ... */
@@ -30,4 +30,4 @@
 
         </div>
     </div>
-</x-guest-layout>
+</x-user-layout>
