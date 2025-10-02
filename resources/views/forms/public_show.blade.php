@@ -68,7 +68,8 @@
         </div>
 
         {{-- Form yang membungkus semua kartu input --}}
-        <form method="POST" action="{{ route('forms.public.submit', $form->slug) }}" class="space-y-8">
+        {{-- **PERBAIKAN UTAMA**: Tambahkan enctype="multipart/form-data" di sini --}}
+        <form method="POST" action="{{ route('forms.public.submit', $form->slug) }}" class="space-y-8" enctype="multipart/form-data">
             @csrf
 
             {{-- Loop untuk membuat KARTU untuk SETIAP input --}}
@@ -108,6 +109,12 @@
                                             {{ $option }}</option>
                                     @endforeach
                                 </select>
+                            {{-- **LOGIKA BARU DITAMBAHKAN DI SINI:** Input untuk Upload File --}}
+                            @elseif($field['type'] === 'file')
+                                <input type="file" name="{{ $name }}" id="{{ $id }}"
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 mt-2"
+                                    @if ($isRequired) required @endif>
+                            {{-- Batas Logika Baru --}}
                             @elseif($field['type'] === 'date')
                                 <input type="date" name="{{ $name }}" id="{{ $id }}"
                                     value="{{ old($name) }}"

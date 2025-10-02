@@ -56,12 +56,16 @@
 
                                     <td class="px-6 py-4 text-right text-sm space-x-4 whitespace-nowrap">
                                         <a href="{{ route('forms.show', $form) }}"
-                                            class="text-indigo-600 hover:text-indigo-800 font-medium">Lihat/Edit</a>
+                                            class="text-indigo-600 hover:text-indigo-800 font-medium">Edit</a>
 
                                         <a href="{{ route('forms.public.show', $hash) }}" target="_blank"
                                             class="text-green-600 hover:text-green-800 font-medium">
                                             Link Publik
                                         </a>
+                                        <a href="{{ route('forms.responses.index', $form) }}"
+        class="text-blue-600 hover:text-blue-800 font-medium">
+        Jawaban
+    </a>
 
                                         <form action="{{ route('forms.destroy', $form) }}" method="POST"
                                             class="inline-block"

@@ -20,6 +20,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('forms', FormController::class);
     // tambah route untuk export/lihat responses jika mau
     Route::get('forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses');
+    Route::get('/forms/{form}/responses', [FormController::class, 'responses'])->name('forms.responses.index');
+
+// Rute untuk melihat detail jawaban individual
+Route::get('/forms/{form}/responses/{response}', [FormController::class, 'showResponseDetail'])->name('forms.responses.show');
+Route::delete('/forms/{form}/responses/{response}', [FormController::class, 'destroyResponse'])->name('forms.responses.destroy');
 });
 
 Route::get('/{hash}', [FormController::class, 'publicShow'])->name('forms.public.show');

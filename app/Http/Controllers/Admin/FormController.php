@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Form;
+use Hashids\Hashids;
+use Illuminate\Support\Str;
+use App\Models\FormResponse;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Hashids\Hashids;
 
 class FormController extends Controller
 {
@@ -57,7 +58,7 @@ class FormController extends Controller
             'background_color' => 'nullable|string|max:7',
             'font_family'      => 'nullable|string',
             'header_image'     => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'thank_you_message'=> 'nullable|string',
+            'thank_you_message' => 'nullable|string',
         ]);
 
         // Handle upload header image jika ada
@@ -109,12 +110,11 @@ class FormController extends Controller
             'title'            => 'required|string',
             'description'      => 'nullable|string',
             'form_fields'      => 'nullable|string',
-            // 'is_public' bisa dihapus dari sini atau dibiarkan, tidak masalah
             'theme_color'      => 'nullable|string|max:7',
             'background_color' => 'nullable|string|max:7',
             'font_family'      => 'nullable|string',
             'header_image'     => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'thank_you_message'=> 'nullable|string',
+            'thank_you_message' => 'nullable|string',
         ]);
 
         // ... (kode handle header_image Anda sudah benar) ...
@@ -168,7 +168,74 @@ class FormController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        // Ambil semua responses untuk form ini
         $responses = $form->responses()->latest()->paginate(20);
-        return view('forms.responses', compact('form', 'responses'));
+
+        // Ambil field (pertanyaan) dari form
+        $fields = collect($form->form_fields);
+
+        // Count total jawaban
+        $totalResponses = $responses->total();
+
+        // Pass ke view index
+        return view('forms.responses.index', compact('form', 'responses', 'fields', 'totalResponses'));
+    }
+
+    /**
+     * Menampilkan detail jawaban individu.
+     */
+    public function showResponseDetail(Form $form, FormResponse $response)
+    {
+        // Otorisasi: Form harus milik user yang sedang login
+        if ($form->user->isNot(Auth::user())) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Pastikan response milik form ini
+        if ($response->form_id !== $form->id) {
+            abort(404);
+        }
+
+        // Ambil data jawaban dan fields
+        $answers = $response->response_data ?? [];
+        $fields = collect($form->form_fields)->keyBy('name');
+
+        // Untuk navigasi Individual (halaman sebelumnya/selanjutnya)
+        $currentResponseIndex = $form->responses()->orderBy('created_at')->pluck('id')->search($response->id) + 1;
+        $totalResponses = $form->responses()->count();
+
+        return view('forms.responses.show', compact('form', 'response', 'answers', 'fields', 'currentResponseIndex', 'totalResponses'));
+    }
+
+    /**
+     * Menghapus jawaban individu dari form (FormResponse).
+     */
+    public function destroyResponse(Form $form, FormResponse $response)
+    {
+        // Otorisasi: Form harus milik user yang sedang login
+        if ($form->user->isNot(Auth::user())) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Pastikan response milik form ini
+        if ($response->form_id !== $form->id) {
+            abort(404);
+        }
+
+        // Hapus file yang terkait jika ada
+        $answers = $response->response_data ?? [];
+        foreach ($answers as $answer) {
+            // Hapus hanya jika path file yang valid (diawali 'forms/')
+            if (is_string($answer) && Str::startsWith($answer, 'forms/')) {
+                Storage::disk('public')->delete($answer);
+            }
+        }
+
+        // Hapus data respons dari database
+        $response->delete();
+
+        // Redirect ke halaman index jawaban
+        return redirect()->route('forms.responses.index', $form)
+            ->with('success', 'Jawaban berhasil dihapus.');
     }
 }

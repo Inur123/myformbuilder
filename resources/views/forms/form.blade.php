@@ -175,6 +175,8 @@
                         <option value="select">Drop-down</option>
                         <option value="date">Tanggal</option>
                         <option value="time">Waktu</option>
+                        {{-- **BARU:** Opsi Upload File ditambahkan di sini --}}
+                        <option value="file">Upload File (File)</option>
                     </select>
                 </div>
                 <div class="options-wrap md:col-span-2" style="display:none;">
@@ -303,6 +305,7 @@
             }
 
             function hasOptions(type) {
+                // 'file' tidak termasuk di sini, sehingga kotak opsi pilihan akan otomatis tersembunyi.
                 return ['radio', 'checkbox', 'select'].includes(type);
             }
 
